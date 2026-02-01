@@ -1,1 +1,2 @@
-32-bit x86 NASM examples.
+32-bit (x86) nasm experiments.
+cover winapi usage

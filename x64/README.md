@@ -1,3 +1,3 @@
-64-bit nasm experiments.
+x64 nasm experiments.
 
 covers Winx64 calling conventions , and similar

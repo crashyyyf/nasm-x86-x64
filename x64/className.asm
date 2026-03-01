@@ -39,7 +39,7 @@ main:
 	mov rcx,rax
 	lea rdx,[setTitle]
 	call SetWindowTextA
-	
+
 	mov rcx,-10
 	call GetStdHandle
 	mov [pInput],rax
@@ -76,9 +76,7 @@ main:
 	mov word [cursor+2],0
 	mov edx,[cursor]
 	call SetConsoleCursorPosition
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	
 	mov rcx,[pInput]
 	lea rdx,[char]
 	mov r8d,256
@@ -198,4 +196,5 @@ fail:
 	add rsp,40
 	xor rcx,rcx
 	call ExitProcess
+
 

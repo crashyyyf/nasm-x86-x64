@@ -4,8 +4,6 @@ section .data
 	hello:db"wrong title name   |  closing in 5 sec",13,0
 	putA:db"write Window name",0
 	setTitle:db"finding Classname >"
-	; FillConsoleOutputCharacter
-	nChar:db "                                 ",0
 section .bss
 	hwnd:resq 1
 	char:resw 256
@@ -14,6 +12,8 @@ section .bss
 	ddb:resq 1
 	buffer:resb 256
 	cursor:resd 1
+	pInput:resq 1
+	pOutput:resq 1
 	; GetConsoleScreenBufferInfobufferInfo (*pointer)
 	lpconsoleINFO:resq 1
 section .text
@@ -40,21 +40,25 @@ main:
 	lea rdx,[setTitle]
 	call SetWindowTextA
 	
+	mov rcx,-10
+	call GetStdHandle
+	mov [pInput],rax
+	
 	mov rcx,-11
 	call GetStdHandle
-	mov r13,rax
+	mov [pOutput],rax
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov word [cursor],0
 	mov word [cursor+2],0
 	mov edx,[cursor]
 	call SetConsoleCursorPosition
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov dx,3
 	call SetConsoleTextAttribute
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	lea rdx,[putA]
 	mov r8,17
 	lea r9,[dda]
@@ -63,21 +67,19 @@ main:
 	call WriteConsoleA
 	add rsp,32
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov dx,2
 	call SetConsoleTextAttribute
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov word [cursor],18
 	mov word [cursor+2],0
 	mov edx,[cursor]
 	call SetConsoleCursorPosition
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	
-	mov rcx,-10
-	call GetStdHandle
-	
-	mov rcx,rax
+	mov rcx,[pInput]
 	lea rdx,[char]
 	mov r8d,256
 	lea r9,[readbytes]
@@ -102,9 +104,8 @@ skip:
 	lea rdx,[char]
 	mov r8d,256
 	call GetClassNameA
-	;mov r8d,eax
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov dx,7
 	call SetConsoleTextAttribute
 
@@ -114,10 +115,7 @@ skip:
 	call wsprintfA
 	mov r15,rax
 	
-	mov rcx,-11
-	call GetStdHandle
-	
-	mov rcx,rax
+	mov rcx,[pOutput]
 	lea rdx,[buffer]
 	mov r8,r15
 	lea r9,[dda]
@@ -129,24 +127,16 @@ skip:
 	mov rcx,5000
     call Sleep
 	
-	mov rcx,-11
-	call GetStdHandle
-	
-	mov rcx,rax
+	mov rcx,[pOutput]
 	lea rdx,[lpconsoleINFO]
 	call GetConsoleScreenBufferInfo
 	test rax,rax
 	jz fail
 	
-	mov rcx,-11
-	call GetStdHandle
-	mov r13,rax
-	
 	movzx eax,word [lpconsoleINFO]
 	movzx ecx,word [lpconsoleINFO+2]
 	imul eax,ecx
 	mov r8d,eax
-	
 	mov rcx,r13
 	mov rdx,32
 	xor r9d,r9d
@@ -157,17 +147,17 @@ skip:
 	call FillConsoleOutputCharacterA
 	add rsp,32
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov word [cursor],0
 	mov word [cursor+2],0
 	mov edx,[cursor]
 	call SetConsoleCursorPosition
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov dx,2
 	call SetConsoleTextAttribute
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	lea rdx,[putA]
 	mov r8,17
 	lea r9,[dda]
@@ -176,11 +166,11 @@ skip:
 	call WriteConsoleA
 	add rsp,32
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov dx,7
 	call SetConsoleTextAttribute
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov word [cursor],18
 	mov word [cursor+2],0
 	mov edx,[cursor]
@@ -189,15 +179,11 @@ skip:
 	jmp main
 fail:
 
-	mov rcx,-11
-	call GetStdHandle
-	mov r13,rax
-	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	mov dx,4
 	call SetConsoleTextAttribute
 	
-	mov rcx,r13
+	mov rcx,[pOutput]
 	lea rdx,[hello]
 	mov r8,38
 	lea r9,[dda]

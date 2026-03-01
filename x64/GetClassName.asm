@@ -192,5 +192,7 @@ fail:
 	
 	mov rcx,5000
 	call Sleep
-
-	jmp main
+	
+	add rsp,40
+	xor rcx,rcx
+	call ExitProcess

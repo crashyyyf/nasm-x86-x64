@@ -135,7 +135,8 @@ skip:
 	movzx ecx,word [lpconsoleINFO+2]
 	imul eax,ecx
 	mov r8d,eax
-	mov rcx,r13
+	
+	mov rcx,[pOutput]
 	mov rdx,32
 	xor r9d,r9d
 	
@@ -176,7 +177,6 @@ skip:
 	
 	jmp main
 fail:
-
 	mov rcx,[pOutput]
 	mov dx,4
 	call SetConsoleTextAttribute
@@ -192,9 +192,5 @@ fail:
 	
 	mov rcx,5000
 	call Sleep
-	
-	add rsp,40
-	xor rcx,rcx
-	call ExitProcess
 
-
+	jmp main

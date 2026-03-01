@@ -34,7 +34,7 @@ section .text
 	extern GetConsoleWindow
 main:
 	sub rsp,40
-	
+	;;;;;;;;; not needed, just added to change the title :>
 	call GetConsoleWindow
 	mov rcx,rax
 	lea rdx,[setTitle]
@@ -198,3 +198,4 @@ fail:
 	add rsp,40
 	xor rcx,rcx
 	call ExitProcess
+
